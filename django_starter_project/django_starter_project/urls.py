@@ -19,6 +19,7 @@ from django.urls import path, include
 from django.contrib.auth.models import User
 from rest_framework import routers, serializers, viewsets
 from ui.views import IndexView
+from example.models import Event
 
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
@@ -32,8 +33,30 @@ class UserViewSet(viewsets.ModelViewSet):
     serializer_class = UserSerializer
 
 
+class EventSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Event
+        fields = ['id', 'title', 'description', 'created', 'modified', 'due']
+
+
+class EventViewSet(viewsets.ModelViewSet):
+    queryset = Event.objects.all()
+    serializer_class = EventSerializer
+    http_method_names = [
+        u"get",
+        u"post",
+        u"put",
+        u"patch",
+        u"delete",
+        u"head",
+        u"options",
+        u"trace",
+    ]
+
+
 router = routers.DefaultRouter()
 router.register(r'users', UserViewSet)
+router.register(r'events', EventViewSet)
 
 
 urlpatterns = [
